@@ -80,6 +80,7 @@ def load_text(path):
       raise e
 
 def tokenize(text):
+    # todo do the lowercasing here for words at the start of a sentence, and discard proper nouns
     return re.findall(r'\b[a-z]+\b', text)
 
 
@@ -115,15 +116,18 @@ def main():
     parser.add_argument("-l", "--word-list", default="wordlists", help="Word list path or folder")
     parser.add_argument("-c", "--cache", default="cache.txt", help="Cache path")
     parser.add_argument("-f", "--force-confirm", action="store_true", help="Add all words without confirming")
-    parser.add_argument("-o", "--output", default="anki-cards.txt", help="Output file path")
+    parser.add_argument("-o", "--output", help="Output file path")
     args = parser.parse_args()
 
     book_path = args.book
     wordlist_path = args.word_list
     cache_path = args.cache
     force_confirm = args.force_confirm
-    base_name = os.path.splitext(os.path.basename(book_path))[0]
-    output_path = f"{base_name}AnkiCards.txt"
+    if args.output:
+        output_path = args.output
+    else:
+        base_name = os.path.splitext(os.path.basename(book_path))[0]
+        output_path = f"{base_name}AnkiCards.txt"
 
     print(f"Parsing {book_path} using wordlist(s) at {wordlist_path} and cache at {cache_path}...")
 
